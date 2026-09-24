@@ -1,0 +1,15 @@
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#63E6BE</item>
+        <item name="android:windowBackground">#101521</item>
+        <item name="android:statusBarColor">#101521</item>
+        <item name="android:navigationBarColor">#101521</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    <style name="StageTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#080B12</item>
+    </style>
+</resources>

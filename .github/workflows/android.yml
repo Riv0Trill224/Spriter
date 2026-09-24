@@ -1,0 +1,56 @@
+name: Compilar Spriter
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: spriter-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: SDK
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Preparar colección Pokémon verificada
+        run: python3 scripts/fetch_pokemon.py
+      - name: Clave de pruebas opcional
+        if: github.event_name != 'pull_request'
+        env:
+          SPRITER_DEBUG_KEYSTORE_BASE64: ${{ secrets.SPRITER_DEBUG_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          if [ -n "$SPRITER_DEBUG_KEYSTORE_BASE64" ]; then
+            mkdir -p "$HOME/.android"
+            printf '%s' "$SPRITER_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
+            chmod 600 "$HOME/.android/debug.keystore"
+          else
+            echo '::warning::Build de pruebas con clave temporal. Lee docs/FIRMA.md antes de futuras actualizaciones.'
+          fi
+      - name: Pruebas, lint y APK
+        run: gradle --no-daemon testDebugUnitTest lintDebug assembleDebug
+      - name: Preparar descarga
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/Spriter-0.2.0-debug.apk
+          cd dist
+          sha256sum Spriter-0.2.0-debug.apk > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Spriter-0.2.0-debug
+          path: dist/
+          if-no-files-found: error
