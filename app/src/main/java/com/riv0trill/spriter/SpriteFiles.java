@@ -13,19 +13,19 @@ import java.util.List;
 import java.util.Locale;
 
 final class SpriteFiles {
-    static List<Uri> builtIn(Context context) throws Exception {
+    static List<Uri> builtIn(Context context, String collection) throws Exception {
         List<Uri> result = new ArrayList<>();
-        String[] files = context.getAssets().list("pokemon");
+        String[] files = context.getAssets().list(collection);
         if (files == null) return result;
         for (String name : files) if (name.matches("[0-9]+\\.png"))
-            result.add(Uri.parse("asset:///pokemon/" + name));
+            result.add(Uri.parse("asset:///" + collection + "/" + name));
         return result;
     }
 
     private static InputStream open(Context context, Uri uri) throws Exception {
         if ("asset".equals(uri.getScheme())) {
             String path = uri.getPath();
-            if (path == null || !path.matches("/pokemon/[0-9]+\\.png"))
+            if (path == null || !path.matches("/(pokemon|custom)/[0-9]+\\.png"))
                 throw new IllegalArgumentException("Recurso desconocido");
             return context.getAssets().open(path.substring(1));
         }

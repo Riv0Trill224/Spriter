@@ -1,37 +1,38 @@
-# Firma del primer APK y actualizaciones
+# Firma estable y releases
 
-El APK inicial es **debug**, para probar el funcionamiento. Android exige que una
-actualización del mismo package tenga el mismo certificado que la instalación
-anterior. Cada entorno nuevo puede generar un debug keystore diferente.
+Spriter usa la misma identidad de firma que RGDS Dashboard. Package independiente:
+`com.riv0trill.spriter`. Certificado SHA-256 esperado:
 
-Si instalas el APK entregado y después compilas desde GitHub con otra clave,
-Android puede rechazar la actualización. Para cambiar de clave hay que
-desinstalar la versión anterior (se borran ajustes y el permiso guardado de la
-carpeta; tus PNG originales permanecen).
+`1c09515ee923d5610dc41e85d75a49900c10158b18c4703463896e4fd1b10264`
 
-## Mantener una clave de pruebas entre ejecuciones de GitHub
+Configura en **Spriter → Settings → Secrets and variables → Actions** los mismos
+valores originales del otro proyecto:
 
-El workflow admite el secret **`SPRITER_DEBUG_KEYSTORE_BASE64`**. Debe contener un
-debug keystore válido codificado en Base64, con las credenciales estándar de
-debug: alias `androiddebugkey`, contraseña de almacén y clave `android`.
+- `RGDS_KEYSTORE_BASE64`
+- `RGDS_KEYSTORE_PASSWORD`
+- `RGDS_KEY_ALIAS`
+- `RGDS_KEY_PASSWORD`
 
-Puedes crear uno en un equipo con JDK:
+GitHub no permite recuperar el contenido de un secret ya guardado. Deben usarse
+el keystore y las credenciales originales; no crear otra clave ni guardarlos en git.
+El workflow restaura la clave en el directorio temporal del runner, compila,
+comprueba el certificado con apksigner y la elimina al terminar. Si falta un secret
+o la identidad no coincide, no publica ningún release.
 
-```sh
-keytool -genkeypair -keystore spriter-debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Spriter Development"
-```
+Después, ejecuta **Actions → Publicar release firmado → Run workflow** sobre main.
+Para versiones posteriores incrementa **versionCode** y **versionName** en
+`app/build.gradle`; cada versión debe ser nueva. No se sobrescriben releases.
+El primer release estable es **1.0.0**, versionCode **100**.
 
-En PowerShell, para copiar el Base64 al portapapeles:
+El actualizador solo acepta versiones superiores, el package exacto y la misma
+firma que la instalación actual. Antes del instalador verifica el SHA-256 y tamaño
+del APK frente a `update.json`, y revisa su certificado y versionCode.
 
-```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path .\spriter-debug.keystore))) | Set-Clipboard
-```
+Las compilaciones debug anteriores llevan otra firma. Para pasar al primer release
+estable puede ser necesario desinstalar el debug (se pierden sus ajustes y fondo
+copiado) e instalar manualmente el APK firmado. No borres tus carpetas de sprites.
+A partir de la instalación estable, conserva siempre esta clave para actualizar.
 
-En el repositorio: **Settings → Secrets and variables → Actions → New repository
-secret**. Usa el nombre exacto y pega el valor. Conserva una copia privada de la
-clave. No subas el archivo ni el Base64 al repositorio.
-
-Esto estabiliza la firma de pruebas de los builds posteriores a la configuración
-del secret. No convierte en compatible un APK ya instalado con una clave distinta.
-Para una distribución pública debe prepararse una firma de release propia y
-aumentar `versionCode` en cada actualización.
+El repositorio privado requiere un token de lectura configurado por el usuario en
+la app. Nunca distribuyas un APK con un token incluido ni publiques el keystore.
+La app no instala en silencio: usa el instalador normal de Android.

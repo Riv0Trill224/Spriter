@@ -1,0 +1,21 @@
+Spriter - Sprite Pack
+Sprites generados: 154
+Formato: PNG RGBA
+Lienzo: 96 x 96 px
+Fondo: transparente
+Escalado: proporción original conservada
+Contenido máximo aproximado: 88 x 88 px, centrado
+
+Rangos por planilla:
+- Planilla 1: 1.png a 30.png
+- Planilla 2: 31.png a 47.png
+- Planilla 3: 48.png a 64.png
+- Planilla 4: 65.png a 76.png
+- Planilla 5: 77.png a 139.png
+- Planilla 6: 140.png a 145.png
+- Planilla 7: 146.png a 154.png
+
+La firma/marca que ocupaba la última celda de la planilla 5 fue excluida.
+
+
+Corrección v2: los sprites 77-139 fueron re-extraídos mediante segmentación global de la planilla para evitar recortes y contaminación entre celdas adyacentes.

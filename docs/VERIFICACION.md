@@ -1,20 +1,19 @@
-# Verificación de Spriter 0.2.0
+# Verificación de Spriter 1.0.0
 
-Fecha: 24/09/2026. Package: `com.riv0trill.spriter`.
+Fecha: 25/09/2026. Package `com.riv0trill.spriter`, versionCode 100.
 
-- Compilación limpia local: correcta (`clean testDebugUnitTest lintDebug assembleDebug`).
-- 7 pruebas unitarias aprobadas; 0 fallos y 0 errores.
-- Android Lint: 0 errors, 5 warnings.
-- Firma del APK verificada con apksigner.
-- versionCode 2, minSdk 26, targetSdk 35.
-- 151 PNG de PokeAPI verificados con su hash Git y decodificados con Pillow.
-- Los 151 archivos y la licencia se comprobaron dentro del APK final.
-- Workflow YAML y sintaxis bash validados; incluye preparación del catálogo.
-- Este registro corresponde a la validación local previa a subir el proyecto. Consulta el estado actual de Actions en https://github.com/Riv0Trill224/Spriter/actions.
-- Sin prueba física en la RG DS.
+- Compilación local de debug, release y AAB correcta (release local sin clave estable).
+- 11 pruebas unitarias correctas en cada variante, sin fallos ni errores.
+- Android Lint debug/release sin errores. Se añadió exclusión explícita de backups y transferencias para las credenciales locales.
+- APK debug: firma de prueba verificada con apksigner.
+- 305 PNG comprobados dentro del APK, byte a byte contra los assets de entrada.
+- Los 154 PNG del ZIP personalizado se mantienen sin modificaciones en el repositorio.
+- YAML de ambos workflows y sintaxis de los bloques bash validados.
+- Workflow de publicación exige los cuatro secrets y comprueba el certificado estable RGDS antes de publicar.
+- No se ha validado en hardware RG DS ni realizado una actualización instalada entre dos releases firmados.
 
-## SHA-256 del APK
+El resultado definitivo de CI y de firma está en:
+https://github.com/Riv0Trill224/Spriter/actions
 
-`a9ef46144a9920d2acf1b41a28cc494a8072cbb1a23c247c3fba166ec82aebf8`
-
-Consulta FIRMA.md antes de cambiar entre builds locales y de GitHub.
+Cada artifact/release incluye su propio `SHA256SUMS.txt`. El archivo histórico
+`docs/SHA256SUMS.txt` pertenece exclusivamente al APK local 0.2.0 indicado en él.

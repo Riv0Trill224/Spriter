@@ -1,0 +1,81 @@
+name: Publicar release firmado
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'app/build.gradle'
+      - '.github/workflows/release.yml'
+permissions:
+  contents: read
+concurrency:
+  group: spriter-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      RGDS_KEYSTORE_PATH: ${{ runner.temp }}/rgds-release.jks
+      RGDS_KEYSTORE_PASSWORD: ${{ secrets.RGDS_KEYSTORE_PASSWORD }}
+      RGDS_KEY_ALIAS: ${{ secrets.RGDS_KEY_ALIAS }}
+      RGDS_KEY_PASSWORD: ${{ secrets.RGDS_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restaurar la clave estable
+        env:
+          RGDS_KEYSTORE_BASE64: ${{ secrets.RGDS_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          for name in RGDS_KEYSTORE_BASE64 RGDS_KEYSTORE_PASSWORD RGDS_KEY_ALIAS RGDS_KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Falta el secret $name en Spriter. Configura los mismos valores de RGDS Dashboard; no se generará otra clave."
+              exit 1
+            fi
+          done
+          umask 077
+          printf '%s' "$RGDS_KEYSTORE_BASE64" | base64 --decode > "$RGDS_KEYSTORE_PATH"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+          log-accepted-android-sdk-licenses: false
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: SDK y Pokémon
+        run: |
+          sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+          python3 scripts/fetch_pokemon.py
+      - name: Validar y compilar
+        run: gradle --no-daemon testReleaseUnitTest lintRelease assembleRelease bundleRelease
+      - name: Verificar certificado y preparar updater
+        id: metadata
+        run: python3 scripts/prepare_release.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Spriter-${{ steps.metadata.outputs.tag }}-signed
+          path: |
+            dist/
+            app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+      - name: Publicar en GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.metadata.outputs.tag }}
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "::error::Ese release ya existe. Incrementa versionCode y versionName; no se sobrescribirá."
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" dist/Spriter.apk dist/update.json dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Spriter $RELEASE_TAG" --notes-file docs/RELEASE.md --latest
+      - name: Eliminar clave temporal
+        if: always()
+        run: rm -f "$RGDS_KEYSTORE_PATH"
