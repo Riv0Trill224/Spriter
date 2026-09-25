@@ -1,6 +1,6 @@
 plugins { id 'com.android.application' }
 
-def signingPath = System.getenv('RGDS_KEYSTORE_PATH')
+def signingPath = System.getenv('SPRITER_KEYSTORE_PATH')
 
 android {
     namespace 'com.riv0trill.spriter'
@@ -22,9 +22,9 @@ android {
         if (signingPath) {
             stable {
                 storeFile file(signingPath)
-                storePassword System.getenv('RGDS_KEYSTORE_PASSWORD')
-                keyAlias System.getenv('RGDS_KEY_ALIAS')
-                keyPassword System.getenv('RGDS_KEY_PASSWORD')
+                storePassword System.getenv('SPRITER_KEYSTORE_PASSWORD')
+                keyAlias 'spriter-release'
+                keyPassword System.getenv('SPRITER_KEY_PASSWORD')
             }
         }
     }

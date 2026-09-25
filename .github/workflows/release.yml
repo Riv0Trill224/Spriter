@@ -19,26 +19,30 @@ jobs:
     permissions:
       contents: write
     env:
-      RGDS_KEYSTORE_PASSWORD: ${{ secrets.RGDS_KEYSTORE_PASSWORD }}
-      RGDS_KEY_ALIAS: ${{ secrets.RGDS_KEY_ALIAS }}
-      RGDS_KEY_PASSWORD: ${{ secrets.RGDS_KEY_PASSWORD }}
+      SPRITER_KEYSTORE_PASSWORD: ${{ secrets.SPRITER_KEYSTORE_PASSWORD }}
+      SPRITER_KEY_PASSWORD: ${{ secrets.SPRITER_KEY_PASSWORD }}
+      SPRITER_CERT_SHA256: ${{ vars.SPRITER_CERT_SHA256 }}
     steps:
       - uses: actions/checkout@v4
       - name: Restaurar la clave estable
         env:
-          RGDS_KEYSTORE_BASE64: ${{ secrets.RGDS_KEYSTORE_BASE64 }}
+          SPRITER_KEYSTORE_BASE64: ${{ secrets.SPRITER_KEYSTORE_BASE64 }}
         shell: bash
         run: |
-          RGDS_KEYSTORE_PATH="$RUNNER_TEMP/rgds-release.jks"
-          echo "RGDS_KEYSTORE_PATH=$RGDS_KEYSTORE_PATH" >> "$GITHUB_ENV"
-          for name in RGDS_KEYSTORE_BASE64 RGDS_KEYSTORE_PASSWORD RGDS_KEY_ALIAS RGDS_KEY_PASSWORD; do
+          SPRITER_KEYSTORE_PATH="$RUNNER_TEMP/spriter-release.jks"
+          echo "SPRITER_KEYSTORE_PATH=$SPRITER_KEYSTORE_PATH" >> "$GITHUB_ENV"
+          for name in SPRITER_KEYSTORE_BASE64 SPRITER_KEYSTORE_PASSWORD SPRITER_KEY_PASSWORD; do
             if [ -z "${!name}" ]; then
-              echo "::error::Falta el secret $name en Spriter. Configura los mismos valores de RGDS Dashboard; no se generará otra clave."
+              echo "::error::Falta el secret $name en Spriter. Genera una clave dedicada para Spriter y configura sus secrets."
               exit 1
             fi
           done
+          if [[ ! "$SPRITER_CERT_SHA256" =~ ^[[:xdigit:]:]{64,95}$ ]]; then
+            echo "::error::Configura la variable SPRITER_CERT_SHA256 con el SHA-256 de la nueva clave."
+            exit 1
+          fi
           umask 077
-          printf '%s' "$RGDS_KEYSTORE_BASE64" | base64 --decode > "$RGDS_KEYSTORE_PATH"
+          printf '%s' "$SPRITER_KEYSTORE_BASE64" | base64 --decode > "$SPRITER_KEYSTORE_PATH"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -79,4 +83,4 @@ jobs:
           gh release create "$RELEASE_TAG" dist/Spriter.apk dist/update.json dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Spriter $RELEASE_TAG" --notes-file docs/RELEASE.md --latest
       - name: Eliminar clave temporal
         if: always()
-        run: rm -f "$RGDS_KEYSTORE_PATH"
+        run: rm -f "$SPRITER_KEYSTORE_PATH"

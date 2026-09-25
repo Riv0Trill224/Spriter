@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the RGDS signing identity and create updater metadata from the built APK."""
+"""Verify the dedicated Spriter signing identity and create updater metadata from the built APK."""
 import hashlib
 import json
 import os
@@ -9,13 +9,15 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED = '1c09515ee923d5610dc41e85d75a49900c10158b18c4703463896e4fd1b10264'
+EXPECTED = os.environ.get('SPRITER_CERT_SHA256', '').replace(':', '').lower()
+if not re.fullmatch(r'[0-9a-f]{64}', EXPECTED):
+    raise SystemExit('Configura la variable SPRITER_CERT_SHA256 con el certificado de tu nueva clave.')
 apk = ROOT / 'app/build/outputs/apk/release/app-release.apk'
 tools = Path(os.environ['ANDROID_HOME']) / 'build-tools/35.0.0'
 verified = subprocess.check_output([str(tools / 'apksigner'), 'verify', '--verbose', '--print-certs', str(apk)], text=True)
 certs = re.findall(r'Signer #\d+ certificate SHA-256 digest: ([0-9a-fA-F]+)', verified)
 if len(certs) != 1 or certs[0].lower() != EXPECTED:
-    raise SystemExit('La firma no coincide con la clave estable de RGDS Dashboard. No se publica.')
+    raise SystemExit('La firma no coincide con la nueva clave estable de Spriter. No se publica.')
 badging = subprocess.check_output([str(tools / 'aapt'), 'dump', 'badging', str(apk)], text=True)
 package = re.search(r"package: name='([^']+)' versionCode='([^']+)' versionName='([^']+)'", badging)
 if not package or package[1] != 'com.riv0trill.spriter':
@@ -32,4 +34,4 @@ metadata = dict(package=package[1], versionCode=int(package[2]), versionName=pac
 if os.environ.get('GITHUB_OUTPUT'):
     with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
         out.write('tag=v' + package[3] + '\n')
-print('Verificados package, versión y certificado RGDS. Release v' + package[3])
+print('Verificados package, versión y certificado Spriter. Release v' + package[3])

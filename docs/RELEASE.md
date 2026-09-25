@@ -11,6 +11,6 @@ Si vienes del APK debug, instala este primer release manualmente; puede requerir
 
 Mientras el repo sea privado, configura un token limitado a Spriter, Contents: Read-only, en ⋮ → Acerca de → Acceso a updates.
 
-Firma estable verificada contra el certificado de RGDS Dashboard. Pendiente de validar en la consola el comportamiento del firmware con ambas pantallas, brillo y consumo.
+Firma estable exclusiva de Spriter, verificada contra el certificado configurado en Actions. Pendiente de validar en la consola el comportamiento del firmware con ambas pantallas, brillo y consumo.
 
 Pokémon: créditos a https://github.com/PokeAPI/sprites; imágenes © The Pokémon Company. Pack personalizado aportado por el propietario del proyecto.

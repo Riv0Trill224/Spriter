@@ -67,8 +67,8 @@ gradle testDebugUnitTest lintDebug assembleDebug
 
 **Compilar Spriter** se ejecuta con cada push/PR y entrega un APK debug.
 **Publicar release firmado** se ejecuta en main al cambiar la versión o su workflow,
-o manualmente. Solo publica si están los cuatro secrets y el certificado coincide
-con RGDS Dashboard. Cada release contiene `Spriter.apk`, `update.json` y `SHA256SUMS.txt`.
+o manualmente. Solo publica si están los tres secrets de la clave exclusiva y el certificado coincide
+con la variable pública configurada para Spriter. Cada release contiene `Spriter.apk`, `update.json` y `SHA256SUMS.txt`.
 
 Pokémon se obtiene en build desde un commit fijado, comprobando los hashes Git de
 cada imagen; la consola no necesita descargar sprites. Los PNG personalizados
