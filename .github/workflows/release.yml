@@ -19,7 +19,6 @@ jobs:
     permissions:
       contents: write
     env:
-      RGDS_KEYSTORE_PATH: ${{ runner.temp }}/rgds-release.jks
       RGDS_KEYSTORE_PASSWORD: ${{ secrets.RGDS_KEYSTORE_PASSWORD }}
       RGDS_KEY_ALIAS: ${{ secrets.RGDS_KEY_ALIAS }}
       RGDS_KEY_PASSWORD: ${{ secrets.RGDS_KEY_PASSWORD }}
@@ -30,6 +29,8 @@ jobs:
           RGDS_KEYSTORE_BASE64: ${{ secrets.RGDS_KEYSTORE_BASE64 }}
         shell: bash
         run: |
+          RGDS_KEYSTORE_PATH="$RUNNER_TEMP/rgds-release.jks"
+          echo "RGDS_KEYSTORE_PATH=$RGDS_KEYSTORE_PATH" >> "$GITHUB_ENV"
           for name in RGDS_KEYSTORE_BASE64 RGDS_KEYSTORE_PASSWORD RGDS_KEY_ALIAS RGDS_KEY_PASSWORD; do
             if [ -z "${!name}" ]; then
               echo "::error::Falta el secret $name en Spriter. Configura los mismos valores de RGDS Dashboard; no se generará otra clave."
