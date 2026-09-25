@@ -1,16 +1,9 @@
-305 sprites incluidos, población aleatoria automática sin límite fijo de cinco y pantalla limpia con menú ⋮.
+Spriter v1.0.1
 
-- Velocidad, brillo de la ventana, fondos desde archivos y opacidad en vivo.
-- Colecciones combinadas, individuales o desde carpeta externa.
-- Hora, fecha y batería opcionales; selección de pantalla y lanzamiento de juegos.
-- Acerca de con GitHub y créditos PokeAPI; toast «Spriter · GitHub».
-- Actualizaciones desde GitHub con verificación de integridad, versión y firma.
+Esta versión estrena una identidad visual original con un nuevo icono y un banner que representan las dos pantallas de la RG DS. El README explica de forma más sencilla cómo usar la app y descargarla.
 
-Descarga `Spriter.apk`. `update.json` y `SHA256SUMS.txt` permiten verificar la descarga.
-Si vienes del APK debug, instala este primer release manualmente; puede requerir desinstalar el debug por la firma distinta.
+El código, el banner y el icono originales se publican bajo licencia MIT. La licencia no cubre las imágenes de terceros ni el paquete personalizado incluido; sus créditos y avisos están en el README y en docs/POKEAPI.md.
 
-Mientras el repo sea privado, configura un token limitado a Spriter, Contents: Read-only, en ⋮ → Acerca de → Acceso a updates.
+Descarga `Spriter.apk` para instalar o actualizar la versión firmada. Si tienes un APK de prueba, puede hacer falta desinstalarlo primero porque usa una firma diferente. `update.json` y `SHA256SUMS.txt` acompañan al APK para verificar la actualización.
 
-Firma estable exclusiva de Spriter, verificada contra el certificado configurado en Actions. Pendiente de validar en la consola el comportamiento del firmware con ambas pantallas, brillo y consumo.
-
-Pokémon: créditos a https://github.com/PokeAPI/sprites; imágenes © The Pokémon Company. Pack personalizado aportado por el propietario del proyecto.
+Mientras el repositorio siga privado, la búsqueda de actualizaciones en la app necesita un token limitado a Spriter con permiso Contents: Read-only, que se configura en ⋮ → Acerca de → Acceso a updates.

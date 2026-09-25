@@ -1,80 +1,34 @@
-# Spriter · 1.0.0
+<p align="center">
+  <img src="docs/banner.svg" alt="Spriter: dos pantallas, una de ellas llena de movimiento" width="100%">
+</p>
 
-Salvapantallas Android para la pantalla libre de la RG DS. Proyecto independiente,
-package **com.riv0trill.spriter**. Se abre directamente en la animación; el único
-control permanente es **⋮**, arriba a la derecha.
+# Spriter
 
-## Incluido
+**Dale vida a la pantalla libre de tu RG DS.** Spriter muestra imágenes en movimiento mientras juegas o usas otra aplicación en la segunda pantalla. Los personajes aparecen y cambian de forma aleatoria, así que cada sesión se ve diferente.
 
-- **305 imágenes** sin conexión: 151 Pokémon de PokeAPI y 154 PNG del pack personalizado v2.
-- Cantidad automática y aleatoria según espacio y tamaño de sprites, sin límite fijo de cinco.
-  La población se reconsidera cada 25–50 segundos de animación; cambia un personaje cada 12–30 segundos.
-  Se evitan repeticiones simultáneas del mismo archivo y se excluyen archivos ilegibles.
-- Selección de todas las imágenes, solo Pokémon, solo el pack personalizado o una carpeta externa.
-- Rebote estilo DVD, velocidad ajustable, escalado de pixel art y renderizado de hasta 30 FPS.
-- Brillo de la ventana, fondo desde el explorador y opacidad del fondo; cambios en vivo.
-- Reloj, fecha y batería opcionales. Toast **Spriter · GitHub** al abrir.
-- Selector de pantalla por ID y opción para abrir un juego en otro display.
-- Acerca de con enlaces al proyecto y a PokeAPI/sprites.
-- Actualizador de GitHub con verificación de versión, tamaño, SHA-256, package y firma instalada.
+## Lo que puedes hacer
 
-## Uso
+- Elegir la colección incluida o una carpeta con tus propias imágenes PNG.
+- Poner una foto o ilustración como fondo y ajustar su opacidad.
+- Cambiar la velocidad de movimiento y el brillo de la ventana.
+- Mostrar la hora, la fecha y la batería si lo deseas.
+- Mover Spriter a la pantalla libre y abrir un juego en la otra.
+- Buscar nuevas versiones desde la aplicación.
 
-Instala el APK firmado desde [Releases](https://github.com/Riv0Trill224/Spriter/releases)
-cuando el workflow de publicación haya terminado. Para probar antes, descarga el
-artifact de **Actions → Compilar Spriter**; ese APK debug no usa la firma estable.
+Las opciones están en el menú **⋮**. La animación queda visible sin botones sobre ella.
 
-1. Abre Spriter. Si hace falta, usa **⋮ → Pantalla** para moverlo a la pantalla libre.
-2. Usa **⋮ → Abrir juego** o el launcher de la consola para abrir el emulador en la otra pantalla.
-3. Personaliza **Velocidad**, **Brillo**, **Fondo personalizado** y **Opacidad del fondo**.
-4. Para usar una carpeta propia: **⋮ → Colección de sprites → Elegir carpeta externa**.
-   PNG numerados o con otros nombres, sin subcarpetas. Cada PNG es una imagen completa.
-5. Para un juego que ocupa ambas pantallas, usa **⋮ → Cerrar**.
+## Descargar y usar
 
-Los IDs no presuponen pantalla superior/inferior. La ROM o el juego pueden decidir
-reutilizar una ventana; en ese caso usa los controles de pantalla de la consola.
-La animación se suspende cuando deja de estar visible, no al perder el foco.
-La compatibilidad física y el impacto sobre autonomía se verifican en la RG DS.
+Descarga **Spriter.apk** en [Releases](https://github.com/Riv0Trill224/Spriter/releases) e instálalo en tu RG DS con Android 8.0 o posterior. Abre Spriter y, si aparece en la pantalla equivocada, entra en **⋮ → Pantalla**. Para usar tus imágenes, entra en **⋮ → Colección de sprites → Elegir carpeta externa**. Usa **⋮ → Cerrar** cuando un juego necesite ambas pantallas.
 
-No se identifica automáticamente la app activa ni la ROM ejecutada dentro de un emulador.
-El brillo afecta a la ventana de Spriter; el firmware determina cómo aplica el brillo a cada display.
-Los fondos se copian al almacenamiento privado de la app; los PNG externos usan permiso persistente de lectura.
+**Actualizaciones:** la app puede avisarte de una nueva versión. Si este repositorio sigue privado, el acceso a los releases requiere un token de GitHub limitado a este repositorio con permiso de lectura de contenido; se configura en **⋮ → Acerca de → Acceso a updates**. También puedes descargar el APK desde Releases e instalarlo manualmente. Los APK de prueba de Actions usan otra firma y no actualizan directamente la versión publicada.
 
-## Actualizaciones y firma
+La selección de pantalla depende del comportamiento de Android y de cada juego. El brillo controla la ventana de Spriter; el firmware decide cómo afecta a cada pantalla. Spriter no reconoce automáticamente el nombre del juego o de la ROM.
 
-Ver [docs/FIRMA.md](docs/FIRMA.md). El repositorio sigue privado. Para consultar sus releases
-introduce un token de GitHub limitado a este repositorio y **Contents: Read-only** en
-**⋮ → Acerca de → Acceso a updates**. El token se guarda cifrado con AndroidKeyStore y
-solo se envía a la API de GitHub para este repositorio; no se incorpora al APK.
-Si el repositorio se hace público más adelante, no será necesario usar token.
+## Proyecto abierto y créditos
 
-La app comprueba al abrir, como máximo una vez cada 24 horas, y avisa si hay una versión
-nueva. **⋮ → Buscar actualizaciones** permite comprobar y descargar manualmente.
-Android pide autorización para instalar desde Spriter y confirma la instalación.
+El **código de Spriter, el banner y el icono originales** se ofrecen bajo la [licencia MIT](LICENSE): puedes usarlos, modificarlos y compartirlos conservando el aviso de licencia. Las imágenes de las colecciones incluidas **no forman parte de esa licencia**.
 
-Esta distribución es para GitHub. La futura versión de Play Store requerirá su propio
-canal de actualización y una revisión de los requisitos vigentes y de los derechos de los assets.
-El AAB producido por Actions es un artefacto de compilación, no una publicación en Play.
+La colección de Pokémon procede de [PokeAPI/sprites](https://github.com/PokeAPI/sprites); sus imágenes pertenecen a The Pokémon Company. Consulta los [créditos y avisos de origen](docs/POKEAPI.md). El paquete personalizado fue aportado al proyecto y su licencia de redistribución independiente no está documentada; no se concede permiso para reutilizarlo por separado. Spriter es un proyecto independiente, sin afiliación con esas marcas.
 
-## Compilación
-
-JDK 17, SDK 35, Build Tools 35.0.0, Gradle 8.9; Android 8.0 o posterior.
-
-```sh
-python3 scripts/fetch_pokemon.py
-gradle testDebugUnitTest lintDebug assembleDebug
-```
-
-**Compilar Spriter** se ejecuta con cada push/PR y entrega un APK debug.
-**Publicar release firmado** se ejecuta en main al cambiar la versión o su workflow,
-o manualmente. Solo publica si están los tres secrets de la clave exclusiva y el certificado coincide
-con la variable pública configurada para Spriter. Cada release contiene `Spriter.apk`, `update.json` y `SHA256SUMS.txt`.
-
-Pokémon se obtiene en build desde un commit fijado, comprobando los hashes Git de
-cada imagen; la consola no necesita descargar sprites. Los PNG personalizados
-están versionados en `app/src/main/assets/custom/`. Los fondos y sprites externos
-se decodifican fuera del hilo de UI, con tamaño acotado.
-
-Pruebas físicas: [docs/PRUEBA_RGDS.md](docs/PRUEBA_RGDS.md).
-Créditos Pokémon y licencia de origen: [docs/POKEAPI.md](docs/POKEAPI.md).
-Inventario del pack recibido: [docs/CUSTOM_SPRITES.txt](docs/CUSTOM_SPRITES.txt).
+Si encuentras un fallo o quieres colaborar, abre un [Issue](https://github.com/Riv0Trill224/Spriter/issues). Para detalles de compilación y firma, consulta la carpeta [docs](docs/).
